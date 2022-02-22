@@ -1,2 +1,2 @@
 # ratcv
-RAT computer vision scripts
+RAT Computer Vision scripts
