@@ -53,6 +53,7 @@ linew_max=2.0
 linew_default=1.0
 linew=linew_default
 grid=True
+wide=False
 
 rgb_in="rgb.csv"
 adir="rgb"
@@ -65,6 +66,7 @@ parser.add_argument('-w',type=float,help="line width "+str(linew_min)+"-"+str(li
 parser.add_argument("-n", action="store_true", help="Do not draw grids")
 parser.add_argument("-y", action="store_true", help="auto scale y-axis")
 parser.add_argument("-d", action="store_true", help="disable auto minimum value ("+str(minval)+")")
+parser.add_argument("-wide", action="store_true", help="generate wide plots")
 args = parser.parse_args()
 
 if args.cy != None:
@@ -83,6 +85,9 @@ if args.n:
 if args.y:
     scale_y=True
 
+if args.wide:
+    wide=True
+
 rgb_in=args.RGB
 
 # Add string to the analysis dir name: rgb_TEXT.csv => TEXT => rgb-TXT (dir name)
@@ -99,7 +104,7 @@ if len(tmp)>0:
 if len(tmp)>0:
     adir=adir+"-"+tmp
 
-print("RGBXY Internal Ratios 1.0, (c) Kim Miikki 2022")
+print("RGBXY Internal Ratios 1.1, (c) Kim Miikki 2022")
 
 curdir=os.getcwd()
 path=Path(curdir)
@@ -206,9 +211,16 @@ b_rg=b/rg_mean
 ratios=np.vstack((r,g,b,bw,rg_mean,rb_mean,gb_mean,r_g,r_b,g_r,g_b,b_r,b_g,r_gb,g_rb,b_rg))
 
 if datalen>1:
-
+    if wide:
+        wi=6.4
+        hi=2.4
+    else:
+        wi=6.4
+        hi=4.8
+        
     # Plot RGB
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="RGB mean value"
     ymins=[r.min(),g.min(),b.min()]
     ymaxs=[r.max(),g.max(),b.max()]
@@ -228,11 +240,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"1_RGB.png",dpi=300)
+    plt.savefig(adir+"1_RGB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot R
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="R mean value"
     ymins=[r.min()]
     ymaxs=[r.max()]
@@ -250,11 +263,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"2_R.png",dpi=300)
+    plt.savefig(adir+"2_R.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot G
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="G mean value"
     ymins=[g.min()]
     ymaxs=[g.max()]
@@ -272,11 +286,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"2_G.png",dpi=300)
+    plt.savefig(adir+"2_G.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot B
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="B mean value"
     ymins=[b.min()]
     ymaxs=[b.max()]
@@ -294,11 +309,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"2_B.png",dpi=300)
+    plt.savefig(adir+"2_B.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
     
     # Plot BW
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="BW mean value"
     ymins=[bw.min()]
     ymaxs=[bw.max()]
@@ -316,11 +332,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"3_BW.png",dpi=300)
+    plt.savefig(adir+"3_BW.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot RG, RB and GB means
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="RG, RB, GB means"
     ymins=[rg_mean.min(),rb_mean.min(),gb_mean.min()]
     ymaxs=[rg_mean.max(),rb_mean.max(),gb_mean.max()]
@@ -340,11 +357,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"4_RG_RB_GB.png",dpi=300)
+    plt.savefig(adir+"4_RG_RB_GB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot R/C ratios
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="R/G, R/B ratios"
     ymins=[r_g.min(),r_b.min()]
     ymaxs=[r_g.max(),r_b.max()]
@@ -363,11 +381,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"5_RG_RB.png",dpi=300)
+    plt.savefig(adir+"5_RG_RB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot G/C ratios
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="G/R, G/B ratios"
     ymins=[g_r.min(),g_b.min()]
     ymaxs=[g_r.max(),g_b.max()]
@@ -386,11 +405,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"5_GR_GB.png",dpi=300)
+    plt.savefig(adir+"5_GR_GB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot B/C ratios
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="B/R, B/G ratios"
     ymins=[b_r.min(),b_r.min()]
     ymaxs=[b_g.max(),b_r.max()]
@@ -409,11 +429,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"5_BR_BG.png",dpi=300)
+    plt.savefig(adir+"5_BR_BG.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot C1/C2C3mean ratios
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="R/GB, G/RB, B/RG ratios"
     ymins=[r_gb.min(),g_rb.min(),b_rg.min()]
     ymaxs=[r_gb.max(),g_rb.max(),b_rg.max()]
@@ -433,11 +454,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"6_RGB_GBR_BRG.png",dpi=300)
+    plt.savefig(adir+"6_RGB_GBR_BRG.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot R/GB ratio
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="R / GB ratio"
     ymins=[r_gb.min()]
     ymaxs=[r_gb.max()]
@@ -455,11 +477,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"7_R_GB.png",dpi=300)
+    plt.savefig(adir+"7_R_GB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot G/RB ratio
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="G / RB ratio"
     ymins=[g_rb.min()]
     ymaxs=[g_rb.max()]
@@ -477,11 +500,12 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"7_G_RB.png",dpi=300)
+    plt.savefig(adir+"7_G_RB.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
     # Plot B/RG ratio
     fig=plt.figure()
+    plt.figure(figsize=(wi,hi))
     ylabel="B / RG ratio"
     ymins=[b_rg.min()]
     ymaxs=[b_rg.max()]
@@ -499,7 +523,7 @@ if datalen>1:
     plt.ylabel(ylabel)
     if grid:
         plt.grid()
-    plt.savefig(adir+"7_B_RG.png",dpi=300)
+    plt.savefig(adir+"7_B_RG.png",dpi=300,bbox_inches='tight')
     plt.close(fig)
 
 if datalen>0:    
